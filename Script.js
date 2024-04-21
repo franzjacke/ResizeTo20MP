@@ -4,17 +4,6 @@ document.getElementById('saveBtn').addEventListener('click', saveZip);
 document.getElementById('downloadLogBtn').addEventListener('click', downloadLog); // New log button listener
 //document.getElementById('individualFileInput').addEventListener('change', handleFileSelection);
 
-document.addEventListener('DOMContentLoaded', function() {
-    var fileInput = document.getElementById('fileInput');
-    var individualFileInput = document.getElementById('individualFileInput');
-
-
-    if (fileInput) {
-        fileInput.addEventListener('change', handleFileSelection);
-    }
-    if (individualFileInput) {
-        individualFileInput.addEventListener('change', handleFileSelection);
-    }
     function handleFileSelection(event) {
     const files = event.target.files;
     if (files.length > 0) {
