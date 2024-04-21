@@ -2,7 +2,6 @@ document.getElementById('fileInput').addEventListener('change', handleFileSelect
 document.getElementById('processBtn').addEventListener('click', processFiles);
 document.getElementById('saveBtn').addEventListener('click', saveZip);
 document.getElementById('downloadLogBtn').addEventListener('click', downloadLog); // New log button listener
-//document.getElementById('individualFileInput').addEventListener('change', handleFileSelection);
 
     function handleFileSelection(event) {
     const files = event.target.files;
