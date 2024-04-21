@@ -14,7 +14,7 @@ document.getElementById('downloadLogBtn').addEventListener('click', downloadLog)
         document.getElementById('processBtn').disabled = true;
     }
 }
-});
+
 
 
 let logMessages = []; // Array to store log messages
