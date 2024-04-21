@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Resizer</title>
+    <link rel="stylesheet" href="styles.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.6.0/jszip.min.js"></script>
+
+</head>
+<body>
+    <input type="file" id="fileInput" multiple webkitdirectory>
+	<button id="processBtn" disabled>PROCESS</button>
+	<button id="saveBtn" disabled>Save Zip</button>
+	<button id="downloadLogBtn" disabled>Download Log</button>
+
+	<div id="status"></div>
+	<div id="loading" class="loader" style="display: none;"></div> <!-- Hidden by default -->
+    <script src="script.js" defer></script>
+</body>
+</html>
