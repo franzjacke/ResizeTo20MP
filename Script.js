@@ -1,19 +1,28 @@
-document.getElementById('fileInput').addEventListener('change', handleFileSelection);
-document.getElementById('processBtn').addEventListener('click', processFiles);
-document.getElementById('saveBtn').addEventListener('click', saveZip);
-document.getElementById('downloadLogBtn').addEventListener('click', downloadLog); // New log button listener
 
-    function handleFileSelection(event) {
-    const files = event.target.files;
-    if (files.length > 0) {
-        document.getElementById('status').innerText = `Files loaded: ${files.length}`;
-        document.getElementById('processBtn').disabled = false;
-        addLog(`${files.length} files loaded.`);
-    } else {
-        document.getElementById('status').innerText = 'No files selected.';
-        document.getElementById('processBtn').disabled = true;
-    }
-}
+document.addEventListener('DOMContentLoaded', function() {
+  // All your event listeners go here
+
+	document.getElementById('saveBtn').addEventListener('click', saveZip);
+	document.getElementById('downloadLogBtn').addEventListener('click', downloadLog); // New log button listener
+
+	document.getElementById('fileInput').addEventListener('change', function(event) {
+	document.getElementById('processFolderBtn').disabled = event.target.files.length === 0;
+	document.getElementById('status').innerText = `Folder loaded: ${event.target.files.length} files`;
+	});
+
+	document.getElementById('individualFileInput').addEventListener('change', function(event) {
+	document.getElementById('processFilesBtn').disabled = event.target.files.length === 0;
+	document.getElementById('status').innerText = `Files loaded: ${event.target.files.length}`;
+	});
+
+	document.getElementById('processFolderBtn').addEventListener('click', function() {
+		processFiles(document.getElementById('fileInput').files);
+	});
+
+	document.getElementById('processFilesBtn').addEventListener('click', function() {
+		processFiles(document.getElementById('individualFileInput').files);
+	});
+});
 
 let logMessages = []; // Array to store log messages
 
@@ -33,14 +42,23 @@ function downloadLog() {
     document.body.removeChild(a);
 }
 
+function handleFileSelection(event) {
+    const files = event.target.files;
+    if (files.length > 0) {
+        document.getElementById('status').innerText = `Files loaded: ${files.length}`;
+        document.getElementById('processBtn').disabled = false;
+        addLog(`${files.length} files loaded.`);
+    } else {
+        document.getElementById('status').innerText = 'No files selected.';
+        document.getElementById('processBtn').disabled = true;
+    }
+}
 
-
-async function processFiles() {
-    const files = document.getElementById('fileInput').files;
+async function processFiles(files) {
     let count = files.length;
     let processedFiles = [];
 
-    for (let i = 0; i < files.length; i++) {
+    for (let i = 0; i < count; i++) {
         const file = files[i];
         document.getElementById('status').innerText = `Currently processing: ${file.name}, remaining: ${count - i - 1}`;
         addLog(`Processing ${file.name}...`);
@@ -48,7 +66,7 @@ async function processFiles() {
         processedFiles.push(processedFile);
         addLog(`${processedFile.name} processed.`);
     }
-    
+
     window.processedFiles = processedFiles; // Store processed files globally for access in saveZip
     document.getElementById('saveBtn').disabled = false;
     document.getElementById('downloadLogBtn').disabled = false; // Enable the log download button after processing
