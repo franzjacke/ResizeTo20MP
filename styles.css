@@ -10,7 +10,7 @@ input[type="file"] {
     margin-bottom: 10px;
 }
 
-#individualFileInput {
+individualFileInput {
     /* Styles specific to the individual files input */
     margin-bottom: 10px;
 }
