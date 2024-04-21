@@ -15,8 +15,6 @@ document.getElementById('downloadLogBtn').addEventListener('click', downloadLog)
     }
 }
 
-
-
 let logMessages = []; // Array to store log messages
 
 function addLog(message) {
