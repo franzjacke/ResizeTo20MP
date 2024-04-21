@@ -1,8 +1,32 @@
-document.getElementById('fileInput').addEventListener('change', handleFileSelection);
+//document.getElementById('fileInput').addEventListener('change', handleFileSelection);
 document.getElementById('processBtn').addEventListener('click', processFiles);
 document.getElementById('saveBtn').addEventListener('click', saveZip);
 document.getElementById('downloadLogBtn').addEventListener('click', downloadLog); // New log button listener
-document.getElementById('individualFileInput').addEventListener('change', handleFileSelection);
+//document.getElementById('individualFileInput').addEventListener('change', handleFileSelection);
+
+document.addEventListener('DOMContentLoaded', function() {
+    var fileInput = document.getElementById('fileInput');
+    var individualFileInput = document.getElementById('individualFileInput');
+
+
+    if (fileInput) {
+        fileInput.addEventListener('change', handleFileSelection);
+    }
+    if (individualFileInput) {
+        individualFileInput.addEventListener('change', handleFileSelection);
+    }
+    function handleFileSelection(event) {
+    const files = event.target.files;
+    if (files.length > 0) {
+        document.getElementById('status').innerText = `Files loaded: ${files.length}`;
+        document.getElementById('processBtn').disabled = false;
+        addLog(`${files.length} files loaded.`);
+    } else {
+        document.getElementById('status').innerText = 'No files selected.';
+        document.getElementById('processBtn').disabled = true;
+    }
+}
+});
 
 
 let logMessages = []; // Array to store log messages
@@ -23,17 +47,7 @@ function downloadLog() {
     document.body.removeChild(a);
 }
 
-function handleFileSelection(event) {
-    const files = event.target.files;
-    if (files.length > 0) {
-        document.getElementById('status').innerText = `Files loaded: ${files.length}`;
-        document.getElementById('processBtn').disabled = false;
-        addLog(`${files.length} files loaded.`);
-    } else {
-        document.getElementById('status').innerText = 'No files selected.';
-        document.getElementById('processBtn').disabled = true;
-    }
-}
+
 
 async function processFiles() {
     const files = document.getElementById('fileInput').files;
