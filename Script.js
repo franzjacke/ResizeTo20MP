@@ -84,7 +84,7 @@ async function resizeImage(file) {
 
             addLog(`Original dimensions: ${originalWidth} x ${originalHeight}, Total pixels: ${totalPixels}`);
 
-            if (totalPixels > 20000000) {
+            if (totalPixels > 25000000) {
                 addLog('Image exceeds 20 million pixels, resizing will be based on aspect ratio.');
 
                 let newWidth, newHeight;
