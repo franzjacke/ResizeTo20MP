@@ -1,19 +1,22 @@
 body {
     font-family: Arial, sans-serif;
     padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: start;
+    display: grid;
+    grid-template-columns: 1fr; /* All content in one column */
+    grid-gap: 20px; /* Space between grid items */
+    align-items: start; /* Align items to the start of each grid cell */
 }
 
-input[type="file"] {
-    margin-bottom: 10px;
+input[type="checkbox"]:focus {
+    outline: 2px solid blue;  /* Highlights the checkbox when it is focused*/
 }
 
-individualFileInput {
-    /* Styles specific to the individual files input */
+
+/*individualFileInput {
+    /* Styles specific to the individual files input 
     margin-bottom: 10px;
-}
+}*/
+
 
 button {
     margin-top: 10px;
@@ -34,6 +37,34 @@ button:disabled {
 
 button:hover:not(:disabled) {
     background-color: #45a049; /* Darker green background on hover */
+}
+
+.button-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Creates three columns */
+    gap: 10px; /* Space between buttons */
+}
+
+.logButton-container {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr); /* This sets up the container to use 1 column */
+    gap: 10px; /* Space between buttons if more than one */
+}
+
+.logButton-container button {
+    background-color: #3498db; /* Blue background for log button */
+    color: white; /* White text */
+    /* Ensure additional styles don't conflict and are correctly overridden */
+}
+
+.logButton-container button:hover:not(:disabled) {
+    background-color: #2980b9; /* Darker blue on hover */
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;  /* Vertically center the items in the line*/
+    gap: 10px;            /* Optional: adds space between the label and checkbox*/
 }
 
 #status {

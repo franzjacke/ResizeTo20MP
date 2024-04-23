@@ -12,27 +12,39 @@
 
 </head>
 <body>
-	<!-- Toggle for including smaller images -->
-<label for="includeSmallerImages">Include non-25MP files:</label>
-<input type="checkbox" id="includeSmallerImages" checked>
+	<div class="checkbox-container">
+		<!-- Toggle for including smaller images -->
+		<label for="includeSmallerImages">Include non-25MP files:</label>
+		<input type="checkbox" id="includeSmallerImages" checked>
+	</div>
 
-    <!-- Folder Selection -->
-	<label for="fileInput">Select Folder:</label>
-	<input type="file" id="fileInput" multiple webkitdirectory>
-	<button id="processFolderBtn" disabled>Process Folder</button>
-
-	<!-- Individual File Selection -->
-	<label for="individualFileInput">Select Individual Files:</label>
-	<input type="file" id="individualFileInput" multiple>
-	<button id="processFilesBtn" disabled>Process Files</button>
-
-	<button id="downloadSingleBtn" disabled>Download Single Image</button>
-	
-	<button id="saveBtn" disabled>Save Zip</button>
-	<button id="downloadLogBtn" disabled>Download Log</button>
+	<div class="button-container">
+		
+		<div>
+			<!-- Folder Selection -->
+			<label for="fileInput">Select Folder:</label>
+			<input type="file" id="fileInput" multiple webkitdirectory>
+			<button id="processFolderBtn" disabled>Process Folder</button>
+		</div>	
+		<div>
+			<!-- Individual File Selection -->
+			<label for="individualFileInput">Select Individual Files:</label>
+			<input type="file" id="individualFileInput" multiple>
+			<button id="processFilesBtn" disabled>Process Files</button>
+		</div>
+		
+	</div>
+	<div class="button-container">
+		<button id="downloadSingleBtn" disabled>Download Single Image</button>
+		<button id="saveBtn" disabled>Save Zip</button>
+		
+	</div>
 
 	<div id="status"></div>
 	<div id="loading" class="loader" style="display: none;"></div> <!-- Hidden by default -->
     
+	<div class="logButton-container">
+		<button id="downloadLogBtn" disabled>Download Log</button>
+	</div>
 </body>
 </html>
