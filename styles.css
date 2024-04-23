@@ -52,7 +52,7 @@ button:hover:not(:disabled) {
 }
 
 .logButton-container button {
-    background-color: #3498db; /* Blue background for log button */
+    background-color: #9E9E9E; /* Disabled background for log button */
     color: white; /* White text */
     /* Ensure additional styles don't conflict and are correctly overridden */
 }
