@@ -22,6 +22,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	document.getElementById('processFilesBtn').addEventListener('click', function() {
 		processFiles(document.getElementById('individualFileInput').files);
 	});
+    document.getElementById('downloadSingleBtn').addEventListener('click', downloadSingleImage);
+    // Add event listener for the new button
+document.getElementById('downloadSingleBtn').addEventListener('click', downloadSingleImage);
+
 });
 
 let logMessages = []; // Array to store log messages
@@ -55,24 +59,77 @@ function handleFileSelection(event) {
 }
 
 async function processFiles(files) {
-    let count = files.length;
-    let processedFiles = [];
+    let promises = [];
+    const includeSmaller = document.getElementById('includeSmallerImages').checked;
 
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        document.getElementById('status').innerText = `Currently processing: ${file.name}, remaining: ${count - i - 1}`;
-        addLog(`Processing ${file.name}...`);
-        const processedFile = await resizeImage(file);
-        processedFiles.push(processedFile);
-        addLog(`${processedFile.name} processed.`);
+
+        // Skip video files
+        if (file.type.startsWith('video/')) {
+            addLog(`Skipping ${file.name} as it is a video file.`);
+            continue;
+        }
+
+        // Process each eligible file in parallel
+        promises.push(processSingleFile(file, includeSmaller));
     }
 
-    window.processedFiles = processedFiles; // Store processed files globally for access in saveZip
-    document.getElementById('saveBtn').disabled = false;
-    document.getElementById('downloadLogBtn').disabled = false; // Enable the log download button after processing
+    const processedFiles = await Promise.all(promises);
+    const validFiles = processedFiles.filter(file => file !== null);
+    window.processedFiles = validFiles; // Store processed files globally for access in saveZip
+
+    updateUIAfterProcessing(validFiles); // Call to centralized UI update function
 }
 
-async function resizeImage(file) {
+
+function updateUIAfterProcessing(processedFiles) {
+    if (processedFiles.length > 0) {
+        document.getElementById('saveBtn').disabled = false;
+        document.getElementById('downloadLogBtn').disabled = false;
+        document.getElementById('downloadSingleBtn').disabled = processedFiles.length !== 1;
+        document.getElementById('status').innerText = "Files ready for zipping.";
+    } else {
+        document.getElementById('status').innerText = "No files to process.";
+        document.getElementById('saveBtn').disabled = true;
+        document.getElementById('downloadLogBtn').disabled = true;
+        document.getElementById('downloadSingleBtn').disabled = true;
+    }
+}
+
+// Helper function to process each file
+async function processSingleFile(file, includeSmaller) {
+    document.getElementById('status').innerText = `Processing: ${file.name}`;
+    addLog(`Processing ${file.name}...`);
+    const processedFile = await resizeImage(file, includeSmaller);
+    if (processedFile) {
+        addLog(`${processedFile.name} processed.`);
+        return processedFile;
+    } else {
+        return null;
+    }
+}
+
+function downloadSingleImage() {
+    if (window.processedFiles && window.processedFiles.length === 1) {
+        const file = window.processedFiles[0];
+        const url = URL.createObjectURL(file);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = file.name; // Ensure the correct file name is used
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        addLog(`Downloaded single image: ${file.name}`);
+    } else {
+        addLog("No single image available or multiple images processed.");
+    }
+}
+
+
+
+
+async function resizeImage(file, includeSmaller = true) {
     return new Promise((resolve, reject) => {
         const img = new Image();
         img.src = URL.createObjectURL(file);
@@ -82,22 +139,11 @@ async function resizeImage(file) {
             const originalHeight = img.height;
             const totalPixels = originalWidth * originalHeight;
 
-            addLog(`Original dimensions: ${originalWidth} x ${originalHeight}, Total pixels: ${totalPixels}`);
-
             if (totalPixels > 25000000) {
-                addLog('Image exceeds 20 million pixels, resizing will be based on aspect ratio.');
-
-                let newWidth, newHeight;
-                if (originalWidth > originalHeight) {
-                    newWidth = 5000;
-                    newHeight = Math.round((5000 / originalWidth) * originalHeight);
-                } else {
-                    newHeight = 5000;
-                    newWidth = Math.round((5000 / originalHeight) * originalWidth);
-                }
-
-                addLog(`Resizing to new dimensions: ${newWidth} x ${newHeight}`);
-				
+                const maxPixels = 25000000;
+                const scale = Math.sqrt(maxPixels / totalPixels);
+                const newWidth = Math.floor(originalWidth * scale);
+                const newHeight = Math.floor(originalHeight * scale);
 
                 const canvas = document.createElement('canvas');
                 canvas.width = newWidth;
@@ -112,13 +158,12 @@ async function resizeImage(file) {
                         return;
                     }
                     const formattedName = formatFileName(file.name) + '_resized.jpg';
-                    addLog(`Blob created for ${formattedName}, Blob size: ${blob.size}`);
                     const resizedFile = new File([blob], formattedName, { type: 'image/jpeg', lastModified: Date.now() });
                     resolve(resizedFile);
                 }, 'image/jpeg');
             } else {
                 addLog(`${file.name} does not require resizing.`);
-                resolve(file);
+                resolve(includeSmaller ? file : null);
             }
         };
         img.onerror = () => {
@@ -127,6 +172,7 @@ async function resizeImage(file) {
         };
     });
 }
+
 
 function formatFileName(filename) {
     return filename.substring(0, filename.lastIndexOf('.')) || filename;
